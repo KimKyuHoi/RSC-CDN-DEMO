@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-// 동적 페이지로 설정 - CDN 캐시 테스트용
-export const dynamic = 'force-dynamic';
+// 동적 페이지 설정 제거 - 이제 정적으로 생성되어 캐싱됨
+// export const dynamic = 'force-dynamic';
 
 // 샘플 제품 데이터 (실제 앱에서는 DB에서 가져옴)
 const products = [
