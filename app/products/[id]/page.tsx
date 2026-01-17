@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+// 동적 페이지로 설정 - CDN 캐시 테스트용
+export const dynamic = 'force-dynamic';
+
 // 샘플 제품 데이터 (실제 앱에서는 DB에서 가져옴)
 const products = [
   {
@@ -44,7 +47,7 @@ async function Recommendations({
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const related = products.filter(
-    (p) => p.category === category && p.id !== currentId
+    (p) => p.category === category && p.id !== currentId,
   );
 
   return (
