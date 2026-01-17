@@ -1,0 +1,26 @@
+{
+  "Comment": "Next.js RSC Cache Policy - Ignores _rsc parameter for caching",
+  "DefaultTTL": 86400,
+  "MaxTTL": 31536000,
+  "MinTTL": 0,
+  "Name": "NextJS-RSC-CachePolicy",
+  "ParametersInCacheKeyAndForwardedToOrigin": {
+    "CookiesConfig": {
+      "CookieBehavior": "none"
+    },
+    "EnableAcceptEncodingBrotli": true,
+    "EnableAcceptEncodingGzip": true,
+    "HeadersConfig": {
+      "HeaderBehavior": "whitelist",
+      "Headers": {
+        "Items": ["RSC", "Next-Router-State-Tree", "Next-Router-Prefetch"]
+      }
+    },
+    "QueryStringsConfig": {
+      "QueryStringBehavior": "allExcept",
+      "QueryStrings": {
+        "Items": ["_rsc"]
+      }
+    }
+  }
+}
