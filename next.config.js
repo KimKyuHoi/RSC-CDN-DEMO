@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // PPR 비활성화 - 순수 App Router RSC 테스트
+  experimental: {
+    ppr: true, // PPR 활성화
+  },
 };
 
 module.exports = nextConfig;

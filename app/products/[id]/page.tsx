@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-// 동적 페이지 설정 제거 - 이제 정적으로 생성되어 캐싱됨
-// export const dynamic = 'force-dynamic';
+// PPR 적용 - Static Shell + Dynamic Holes
+export const experimental_ppr = true;
 
 // 샘플 제품 데이터 (실제 앱에서는 DB에서 가져옴)
 const products = [
@@ -50,14 +50,30 @@ async function Recommendations({
     (p) => p.category === category && p.id !== currentId,
   );
 
+  // 서버 렌더링 시간 추가 (캐싱 확인용)
+  const serverTime = new Date().toISOString();
+
   return (
-    <div className="product-grid">
-      {related.map((p) => (
-        <Link key={p.id} href={`/products/${p.id}`} className="product-card">
-          <h4>{p.name}</h4>
-          <p>${p.price}</p>
-        </Link>
-      ))}
+    <div>
+      <div style={{ 
+        padding: '0.5rem', 
+        marginBottom: '1rem', 
+        background: '#f0f0f0', 
+        borderRadius: '4px',
+        fontSize: '0.875rem'
+      }}>
+        🕐 서버 렌더링 시간: {serverTime}
+        <br />
+        <small>(이 시간이 매번 바뀌면 캐싱 안 됨 = 정상)</small>
+      </div>
+      <div className="product-grid">
+        {related.map((p) => (
+          <Link key={p.id} href={`/products/${p.id}`} className="product-card">
+            <h4>{p.name}</h4>
+            <p>${p.price}</p>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
@@ -79,15 +95,18 @@ export default async function ProductPage({
       <Link href="/">← 홈으로</Link>
 
       <div className="debug-info" style={{ marginTop: '1rem' }}>
-        <h3>✨ PPR (Partial Prerendering) 적용됨</h3>
+        <h3>✨ PPR + 해시 고정 테스트</h3>
         <p>
-          이제 이 페이지의 <strong>'껍데기(Shell)'</strong>는 정적으로
-          캐시됩니다. 어떤 경로로 오든 껍데기는 즉시 로드되며, 아래 추천 목록만
-          동적으로 채워집니다.
+          <strong>Static Shell:</strong> 이 섹션(제품명, 가격, 설명)은 빌드 시 
+          생성되어 CDN에 캐싱됩니다.
+        </p>
+        <p style={{ marginTop: '0.5rem' }}>
+          <strong>Dynamic Hole:</strong> 아래 추천 목록은 매번 서버에서 
+          새로 렌더링되어 스트리밍됩니다. (캐싱되지 않음)
         </p>
         <p style={{ marginTop: '0.5rem', color: '#0070f3' }}>
-          <strong>결과:</strong> 유입 경로와 상관없이 CDN에서 최상위 레이아웃을
-          즉시 서빙합니다.
+          <strong>핵심:</strong> _rsc 해시를 고정해도 Dynamic Holes는 
+          매번 새로 fetch됩니다!
         </p>
       </div>
 
